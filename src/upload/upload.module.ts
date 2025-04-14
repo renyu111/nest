@@ -5,6 +5,7 @@ import { UploadService } from './upload.service';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { existsSync, mkdirSync } from 'fs';
+import { v4 as uuidv4 } from 'uuid';
 
 @Module({
   imports: [
@@ -24,10 +25,10 @@ import { existsSync, mkdirSync } from 'fs';
           cb(null, uploadPath);
         },
         filename: (req, file, cb) => {
-          // 生成文件名：时间戳 + 随机数 + 原始扩展名
-          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+          // 使用 UUID 生成文件名
+          const uuid = uuidv4();
           const ext = extname(file.originalname);
-          cb(null, `${uniqueSuffix}${ext}`);
+          cb(null, `${uuid}${ext}`);
         },
       }),
       fileFilter: (req, file, cb) => {
